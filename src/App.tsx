@@ -1,5 +1,12 @@
-export function App() {
-  return <div className="App">This is React Redux app</div>
+// Lessons
+import Lesson_16 from "lessons/Lesson_16"
+
+function App() {
+  return (
+    <>
+      <Lesson_16 />
+    </>
+  )
 }
 
 export default App
