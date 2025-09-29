@@ -23,10 +23,7 @@ export default defineConfig({
     root: import.meta.dirname,
     name: "vite-template-redux",
     environment: "jsdom",
-    typecheck: {
-      enabled: true,
-      tsconfig: path.join(import.meta.dirname, "tsconfig.json"),
-    },
+    typecheck: { enabled: true, tsconfig: path.join(import.meta.dirname, "tsconfig.json") },
     globals: true,
     watch: false,
     setupFiles: ["./src/setupTests.ts"],

@@ -6,6 +6,7 @@
   "homepage": "https://CureForCode.github.io/React_Redux_54elfs_somov",
   "scripts": {
     "build": "tsc -b && vite build",
+    "postbuild": "node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
     "dev": "vite",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
