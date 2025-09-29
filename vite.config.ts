@@ -1,10 +1,9 @@
 import react from "@vitejs/plugin-react"
 import * as path from "node:path"
 import { defineConfig } from "vitest/config"
-import packageJson from "./package.json" with { type: "json" }
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  base: "/React_Redux_54elfs_somov/",
   plugins: [react()],
   resolve: {
     alias: {
@@ -19,12 +18,10 @@ export default defineConfig({
       store: path.resolve(__dirname, "src/store"),
     },
   },
-  server: {
-    open: true,
-  },
+  server: { open: true },
   test: {
     root: import.meta.dirname,
-    name: packageJson.name,
+    name: "vite-template-redux",
     environment: "jsdom",
     typecheck: {
       enabled: true,
