@@ -8,15 +8,18 @@ function Button({
   children,
   isRed = false,
   disabled = false,
+  size = "lg",
+  fullWidth = true,
 }: ButtonProps) {
   return (
     <ButtonComponent
       disabled={disabled}
       $isRed={isRed}
+      $size={size}
+      $fullWidth={fullWidth}
       onClick={onClick}
       type={type}
     >
-      {/* Условный рендеринг */}
       {!children && name}
       {children}
     </ButtonComponent>
