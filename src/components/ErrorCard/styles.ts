@@ -1,9 +1,9 @@
 import styled from "@emotion/styled"
 
 export const ErrorBox = styled.div`
-  width: 709px;
-  height: 220px;
-  padding: 24px;
+  width: min(100%, 720px);
+  min-height: 180px;
+  padding: clamp(16px, 4vw, 24px);
   border-radius: 16px;
   background: linear-gradient(
     133.66deg,
@@ -18,8 +18,8 @@ export const ErrorBox = styled.div`
 `
 
 export const Title = styled.h2`
-  font-size: 57px;
-  line-height: 69px;
+  font-size: clamp(22px, 3.5vw, 28px);
+  line-height: 1.2;
   font-weight: 500;
   color: #f35e5e;
   margin-bottom: 8px;
@@ -27,25 +27,22 @@ export const Title = styled.h2`
 `
 
 export const Text = styled.p`
-  font-size: 18px;
-  line-height: 22px;
+  font-size: clamp(14px, 2.5vw, 18px);
+  line-height: 1.3;
   font-weight: 400;
   color: #fff;
   text-align: center;
 `
 
 export const Actions = styled.div`
-  margin-top: 24px;
+  margin-top: 16px;
   display: flex;
   justify-content: center;
+  width: 100%;
 
   button {
-    width: 155px;
+    width: min(100%, 220px);
     height: 48px;
-    padding: 12px 40px;
-    border-radius: 50px;
-    font-size: 20px;
-    border: none;
+    font-size: clamp(16px, 2vw, 20px);
   }
 `
-

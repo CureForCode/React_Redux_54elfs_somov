@@ -8,6 +8,10 @@ export const Page = styled.div`
   width: 100%;
   color: #fff;
   background: url(${bg}) center/cover no-repeat fixed;
+
+  @media (max-width: 768px) {
+    background-attachment: scroll;
+  }
 `
 
 export const Main = styled.main`
@@ -15,8 +19,8 @@ export const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px 16px;
-  gap: 120px;
+  padding: clamp(16px, 4vw, 32px) 16px;
+  gap: clamp(40px, 10vw, 120px);
 `
 
 export const Content = styled.div`
@@ -24,7 +28,7 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  width: 100%;
+  width: min(100%, 720px);
 `
 
 export const Loading = styled.div`
@@ -34,4 +38,5 @@ export const Loading = styled.div`
   font-style: italic;
   font-weight: bold;
   color: #fff;
+  width: 100%;
 `

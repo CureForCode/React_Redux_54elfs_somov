@@ -2,9 +2,9 @@ import styled from "@emotion/styled"
 
 export const FormWrapper = styled.form`
   display: flex;
-  width: 710px;
-  height: 48px;
-  margin-top: 90px;
+  width: min(100%, 720px);
+  height: auto;
+  margin-top: clamp(32px, 10vw, 90px);
 `
 
 export const Row = styled.div`
@@ -13,25 +13,26 @@ export const Row = styled.div`
   width: 100%;
 
   input {
-    width: 550px;
+    flex: 1 1 auto;
     height: 48px;
     border-radius: 40px;
-    padding: 12px 20px;
+    padding: 12px 16px;
     border: 1px solid #fff;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(8px);
-    font-size: 20px;
+    font-size: clamp(16px, 3.5vw, 20px);
     color: #fff;
   }
 
   button {
-    width: 146px;
-    height: 48px;
-    padding: 12px 40px;
-    border-radius: 50px;
-    font-size: 20px;
-    background:
-      linear-gradient(0deg, #3678b4, #3678b4),
-      linear-gradient(270.38deg, #362a84 0.23%, #5936b4 94.2%);
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
   }
 `
