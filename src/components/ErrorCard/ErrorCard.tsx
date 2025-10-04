@@ -4,14 +4,27 @@ import { ErrorBox, Title, Text, Actions } from "./styles"
 interface ErrorCardProps {
   code?: string | number
   message: string
+  description?: string
   onDelete: () => void
 }
 
-function ErrorCard({ code, message, onDelete }: ErrorCardProps) {
+function ErrorCard({ code, message, description, onDelete }: ErrorCardProps) {
   return (
-    <ErrorBox>
+    <ErrorBox role="alert" aria-live="assertive">
       <Title>API Error</Title>
-      <Text>{code ? `(${code}) ${message}` : message}</Text>
+      {code !== undefined && code !== null && (
+        <Text>
+          <strong>Status:</strong> {code}
+        </Text>
+      )}
+      <Text>
+        <strong>Message:</strong> {message}
+      </Text>
+      {description && (
+        <Text>
+          <strong>Description:</strong> {description}
+        </Text>
+      )}
       <Actions>
         <Button isRed name="Delete" onClick={onDelete} />
       </Actions>

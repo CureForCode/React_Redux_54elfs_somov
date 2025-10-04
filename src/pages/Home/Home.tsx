@@ -4,7 +4,6 @@ import {
   weatherActions,
   weatherSelectors,
 } from "store/redux/weather/weatherSlice"
-import { savedWeatherActions } from "store/redux/savedWeather/savedWeatherSlice"
 
 import Header from "components/Header/Header"
 import SearchForm from "components/SearchForm/SearchForm"
@@ -22,19 +21,19 @@ function Home() {
   const data = useAppSelector(weatherSelectors.current)
 
   const onDeleteWeather = () => {
-    dispatch(weatherActions.clearCurrent())
+    dispatch(weatherActions.clear("data"))
   }
 
   const onSaveWeather = () => {
     if (data) {
-      dispatch(savedWeatherActions.saveFromCurrent(data))
-      dispatch(weatherActions.clearCurrent())
+      dispatch(weatherActions.saveFromCurrent())
+      dispatch(weatherActions.clear("data"))
       alert("Information successfully saved")
     }
   }
 
   const onDeleteError = () => {
-    dispatch(weatherActions.clearError())
+    dispatch(weatherActions.clear("error"))
     alert("Information about error was deleted")
   }
 
@@ -62,7 +61,12 @@ function Home() {
             />
           )}
           {!data && error && (
-            <ErrorCard message={error} onDelete={onDeleteError} />
+            <ErrorCard
+              code={error.code}
+              message={error.message}
+              description={error.description}
+              onDelete={onDeleteError}
+            />
           )}
         </Content>
       </Main>

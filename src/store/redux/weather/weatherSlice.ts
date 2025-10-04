@@ -1,13 +1,20 @@
 import axios from "axios"
+import { v4 } from "uuid"
 import { createAppSlice } from "store/createAppSlice"
-import { CurrentWeatherState, WeatherAPIResponse } from "./types"
+import {
+  WeatherState,
+  WeatherAPIResponse,
+  SavedWeather,
+  ApiError,
+} from "./types"
 import { PayloadAction } from "@reduxjs/toolkit"
 
 const APP_ID = "5bcee31d922035d5c6c4672756ec9d88"
 const FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast"
 
-const initialState: CurrentWeatherState = {
+const initialState: WeatherState = {
   data: undefined,
+  saved: [],
   error: undefined,
   isFetching: false,
 }
@@ -47,46 +54,99 @@ export const weatherSlice = createAppSlice({
           }
           return mapped
         } catch (err: any) {
-          return rejectWithValue(
-            err?.response?.data?.message ?? "Some Network Error",
-          )
+          const apiError: ApiError = {
+            code: err?.response?.data?.cod ?? err?.response?.status,
+            message:
+              err?.response?.data?.message ??
+              err?.message ??
+              "Some Network Error",
+            description:
+              typeof err?.response?.data === "string"
+                ? err.response.data
+                : undefined,
+          }
+          return rejectWithValue(apiError)
         }
       },
       {
-        pending: (state: CurrentWeatherState) => {
+        pending: (state: WeatherState) => {
           state.isFetching = true
           state.error = undefined
+          state.data = undefined
         },
         fulfilled: (
-          state: CurrentWeatherState,
+          state: WeatherState,
           action: PayloadAction<WeatherAPIResponse>,
         ) => {
           state.isFetching = false
           state.data = action.payload
           state.error = undefined
         },
-        rejected: (state: CurrentWeatherState, action: PayloadAction<any>) => {
+        rejected: (state: WeatherState, action: PayloadAction<any>) => {
           state.isFetching = false
           state.data = undefined
-          state.error =
-            typeof action.payload === "string"
-              ? action.payload
-              : "Some Network Error"
+
+          const payload = action.payload
+          if (payload && typeof payload === "object") {
+            state.error = {
+              code: payload.code,
+              message:
+                typeof payload.message === "string"
+                  ? payload.message
+                  : "Some Network Error",
+              description:
+                typeof payload.description === "string"
+                  ? payload.description
+                  : undefined,
+            }
+          } else {
+            state.error = { message: "Some Network Error" }
+          }
         },
       },
     ),
-    clearCurrent: create.reducer((state: CurrentWeatherState) => {
-      state.data = undefined
-      state.error = undefined
+
+    clear: create.reducer(
+      (
+        state: WeatherState,
+        action: PayloadAction<"data" | "error" | "all" | undefined>,
+      ) => {
+        const mode = action.payload ?? "all"
+        if (mode === "data" || mode === "all") state.data = undefined
+        if (mode === "error" || mode === "all") state.error = undefined
+      },
+    ),
+
+    saveFromCurrent: create.reducer((state: WeatherState) => {
+      const data = state.data
+      if (!data) return
+      const card: SavedWeather = {
+        id: v4(),
+        city: data.name,
+        country: data.sys.country,
+        temp: Math.round(data.main.temp),
+        icons: data.weather.slice(0, 3),
+      }
+      state.saved = [card, ...state.saved]
     }),
-    clearError: create.reducer((state: CurrentWeatherState) => {
-      state.error = undefined
-    }),
+
+    deleteSaved: create.reducer(
+      (state: WeatherState, action: PayloadAction<string | undefined>) => {
+        const id = action.payload
+        if (id) {
+          state.saved = state.saved.filter(item => item.id !== id)
+        } else {
+          state.saved = []
+        }
+      },
+    ),
   }),
   selectors: {
-    current: (state: CurrentWeatherState) => state.data,
-    isFetching: (state: CurrentWeatherState) => state.isFetching,
-    error: (state: CurrentWeatherState) => state.error,
+    current: (state: WeatherState) => state.data,
+    isFetching: (state: WeatherState) => state.isFetching,
+    error: (state: WeatherState) => state.error,
+    list: (state: WeatherState) => state.saved,
+    hasAny: (state: WeatherState) => state.saved.length > 0,
   },
 })
 
